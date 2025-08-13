@@ -1,0 +1,13 @@
+[0m[[0m[0mdebug[0m] [0m[0mPackaging D:\_Document\Efinity_doc\project\Portascope\scala\target\scala-2.12\vexriscv-adc_2.12-1.0.0.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	vexriscv[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  D:\_Document\Efinity_doc\project\Portascope\scala\target\scala-2.12\classes\vexriscv[0m
+[0m[[0m[0mdebug[0m] [0m[0m	vexriscv\demo[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  D:\_Document\Efinity_doc\project\Portascope\scala\target\scala-2.12\classes\vexriscv\demo[0m
+[0m[[0m[0mdebug[0m] [0m[0m	vexriscv\demo\VexRiscv_Config$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  D:\_Document\Efinity_doc\project\Portascope\scala\target\scala-2.12\classes\vexriscv\demo\VexRiscv_Config$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	vexriscv\demo\VexRiscv_Config$delayedInit$body.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  D:\_Document\Efinity_doc\project\Portascope\scala\target\scala-2.12\classes\vexriscv\demo\VexRiscv_Config$delayedInit$body.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	vexriscv\demo\VexRiscv_Config.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  D:\_Document\Efinity_doc\project\Portascope\scala\target\scala-2.12\classes\vexriscv\demo\VexRiscv_Config.class[0m
+[0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m
