@@ -29,6 +29,44 @@ module Portascope (
     wire signed [W-1:0] DATA_B;     // 解包B通道
 
     // =========================================================================
+    // VexRiscv相关信号定义
+    // =========================================================================
+    
+    // 指令总线信号
+    wire        iBus_cmd_valid;
+    wire        iBus_cmd_ready;
+    wire [31:0] iBus_cmd_payload_pc;
+    wire        iBus_rsp_valid;
+    wire        iBus_rsp_payload_error;
+    wire [31:0] iBus_rsp_payload_inst;
+    
+    // 数据总线信号
+    wire        dBus_cmd_valid;
+    wire        dBus_cmd_ready;
+    wire        dBus_cmd_payload_wr;
+    wire [3:0]  dBus_cmd_payload_mask;
+    wire [31:0] dBus_cmd_payload_address;
+    wire [31:0] dBus_cmd_payload_data;
+    wire [1:0]  dBus_cmd_payload_size;
+    wire        dBus_rsp_ready;
+    wire        dBus_rsp_error;
+    wire [31:0] dBus_rsp_data;
+    
+    // 中断信号
+    wire        timerInterrupt;
+    wire        externalInterrupt;
+    wire        softwareInterrupt;
+    
+    // 调试信号
+    wire        debug_bus_cmd_valid;
+    wire        debug_bus_cmd_ready;
+    wire        debug_bus_cmd_payload_wr;
+    wire [7:0]  debug_bus_cmd_payload_address;
+    wire [31:0] debug_bus_cmd_payload_data;
+    wire [31:0] debug_bus_rsp_data;
+    wire        debug_resetOut;
+
+    // =========================================================================
     // 模块实例化
     // =========================================================================
 
@@ -94,35 +132,35 @@ module Portascope (
     );
 
     VexRiscv u_VexRiscv (
-        .iBus_cmd_valid(),
-        .iBus_cmd_ready(),
-        .iBus_cmd_payload_pc(),
-        .iBus_rsp_valid(),
-        .iBus_rsp_payload_error(),
-        .iBus_rsp_payload_inst(),
+        .iBus_cmd_valid(iBus_cmd_valid),
+        .iBus_cmd_ready(iBus_cmd_ready),
+        .iBus_cmd_payload_pc(iBus_cmd_payload_pc),
+        .iBus_rsp_valid(iBus_rsp_valid),
+        .iBus_rsp_payload_error(iBus_rsp_payload_error),
+        .iBus_rsp_payload_inst(iBus_rsp_payload_inst),
 
-        .timerInterrupt(),
-        .externalInterrupt(),
-        .softwareInterrupt(),
+        .timerInterrupt(timerInterrupt),
+        .externalInterrupt(externalInterrupt),
+        .softwareInterrupt(softwareInterrupt),
 
-        .debug_bus_cmd_valid(),
-        .debug_bus_cmd_ready(),
-        .debug_bus_cmd_payload_wr(),
-        .debug_bus_cmd_payload_address(),
-        .debug_bus_cmd_payload_data(),
-        .debug_bus_rsp_data(),
-        .debug_resetOut(),
+        .debug_bus_cmd_valid(debug_bus_cmd_valid),
+        .debug_bus_cmd_ready(debug_bus_cmd_ready),
+        .debug_bus_cmd_payload_wr(debug_bus_cmd_payload_wr),
+        .debug_bus_cmd_payload_address(debug_bus_cmd_payload_address),
+        .debug_bus_cmd_payload_data(debug_bus_cmd_payload_data),
+        .debug_bus_rsp_data(debug_bus_rsp_data),
+        .debug_resetOut(debug_resetOut),
 
-        .dBus_cmd_valid(),
-        .dBus_cmd_ready(),
-        .dBus_cmd_payload_wr(),
-        .dBus_cmd_payload_mask(),
-        .dBus_cmd_payload_address(),
-        .dBus_cmd_payload_data(),
-        .dBus_cmd_payload_size(),
-        .dBus_rsp_ready(),
-        .dBus_rsp_error(),
-        .dBus_rsp_data(),
+        .dBus_cmd_valid(dBus_cmd_valid),
+        .dBus_cmd_ready(dBus_cmd_ready),
+        .dBus_cmd_payload_wr(dBus_cmd_payload_wr),
+        .dBus_cmd_payload_mask(dBus_cmd_payload_mask),
+        .dBus_cmd_payload_address(dBus_cmd_payload_address),
+        .dBus_cmd_payload_data(dBus_cmd_payload_data),
+        .dBus_cmd_payload_size(dBus_cmd_payload_size),
+        .dBus_rsp_ready(dBus_rsp_ready),
+        .dBus_rsp_error(dBus_rsp_error),
+        .dBus_rsp_data(dBus_rsp_data),
 
         .clk(lvds_parallel_clk),
         .reset(~sys_rst_n_VexRiscv),
