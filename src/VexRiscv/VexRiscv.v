@@ -5,35 +5,44 @@
 `timescale 1ns/1ps
 
 module VexRiscv (
-  output wire          iBus_cmd_valid,
-  input  wire          iBus_cmd_ready,
-  output wire [31:0]   iBus_cmd_payload_pc,
-  input  wire          iBus_rsp_valid,
-  input  wire          iBus_rsp_payload_error,
-  input  wire [31:0]   iBus_rsp_payload_inst,
-  input  wire          timerInterrupt,
-  input  wire          externalInterrupt,
-  input  wire          softwareInterrupt,
-  input  wire          debug_bus_cmd_valid,
-  output reg           debug_bus_cmd_ready,
-  input  wire          debug_bus_cmd_payload_wr,
-  input  wire [7:0]    debug_bus_cmd_payload_address,
-  input  wire [31:0]   debug_bus_cmd_payload_data,
-  output reg  [31:0]   debug_bus_rsp_data,
-  output wire          debug_resetOut,
-  output wire          dBus_cmd_valid,
-  input  wire          dBus_cmd_ready,
-  output wire          dBus_cmd_payload_wr,
-  output wire [3:0]    dBus_cmd_payload_mask,
-  output wire [31:0]   dBus_cmd_payload_address,
-  output wire [31:0]   dBus_cmd_payload_data,
-  output wire [1:0]    dBus_cmd_payload_size,
-  input  wire          dBus_rsp_ready,
-  input  wire          dBus_rsp_error,
-  input  wire [31:0]   dBus_rsp_data,
-  input  wire          clk,
-  input  wire          reset,
-  input  wire          debugReset
+  // 指令总线接口
+  output wire          iBus_cmd_valid,            // 指令获取请求有效
+  input  wire          iBus_cmd_ready,            // 指令总线准备接收请求
+  output wire [31:0]   iBus_cmd_payload_pc,       // 指令获取的程序计数器地址
+  input  wire          iBus_rsp_valid,            // 指令响应有效
+  input  wire          iBus_rsp_payload_error,    // 指令获取错误标志
+  input  wire [31:0]   iBus_rsp_payload_inst,     // 获取到的指令数据
+  
+  // 中断接口
+  input  wire          timerInterrupt,            // 定时器中断输入
+  input  wire          externalInterrupt,         // 外部中断输入
+  input  wire          softwareInterrupt,         // 软件中断输入
+  
+  // 调试接口
+  input  wire          debug_bus_cmd_valid,       // 调试命令有效
+  output reg           debug_bus_cmd_ready,       // 调试命令准备就绪
+  input  wire          debug_bus_cmd_payload_wr,  // 调试写使能
+  input  wire [7:0]    debug_bus_cmd_payload_address, // 调试地址
+  input  wire [31:0]   debug_bus_cmd_payload_data,    // 调试数据
+  output reg  [31:0]   debug_bus_rsp_data,        // 调试响应数据
+  output wire          debug_resetOut,            // 调试复位输出
+  
+  // 数据总线接口
+  output wire          dBus_cmd_valid,            // 数据总线命令有效
+  input  wire          dBus_cmd_ready,            // 数据总线准备好接收命令
+  output wire          dBus_cmd_payload_wr,       // 数据总线写使能
+  output wire [3:0]    dBus_cmd_payload_mask,     // 数据总线字节掩码
+  output wire [31:0]   dBus_cmd_payload_address,  // 数据总线地址
+  output wire [31:0]   dBus_cmd_payload_data,     // 数据总线写数据
+  output wire [1:0]    dBus_cmd_payload_size,     // 数据总线传输大小(00:byte, 01:half, 10:word)
+  input  wire          dBus_rsp_ready,            // 数据总线响应准备好
+  input  wire          dBus_rsp_error,            // 数据总线响应错误
+  input  wire [31:0]   dBus_rsp_data,             // 数据总线读取数据
+  
+  // 时钟和复位
+  input  wire          clk,                       // 系统时钟
+  input  wire          reset,                     // 系统复位
+  input  wire          debugReset                 // 调试复位
 );
   localparam ShiftCtrlEnum_DISABLE_1 = 2'd0;
   localparam ShiftCtrlEnum_SLL_1 = 2'd1;
