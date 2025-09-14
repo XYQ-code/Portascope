@@ -130,6 +130,30 @@ module Portascope (
         .lvds_tx2_DATA    (lvds_tx2_DATA),
         .lvds_tx3_DATA    (lvds_tx3_DATA)
     );
+/*
+    // 简单单口ROM，位宽32，深度4096
+    instruction_rom u_instruction_rom(
+        .re ( re ),
+        .we ( we ),
+        .waddr ( waddr ),
+        .wdata_a ( wdata_a ),
+        .rdata_b ( rdata_b ),
+        .raddr ( raddr ),
+        .clk ( clk )
+    );
+
+    // 真双口RAM，位宽32，深度8192
+    data_ram u_data_ram(
+        .we_a ( we_a ),
+        .we_b ( we_b ),
+        .addr_a ( addr_a ),
+        .wdata_a ( wdata_a ),
+        .rdata_a ( rdata_a ),
+        .rdata_b ( rdata_b ),
+        .addr_b ( addr_b ),
+        .wdata_b ( wdata_b ),
+        .clk ( clk )
+    );
 
     VexRiscv u_VexRiscv (
         .iBus_cmd_valid(iBus_cmd_valid),
@@ -165,5 +189,5 @@ module Portascope (
         .clk(lvds_parallel_clk),
         .reset(~sys_rst_n_VexRiscv),
         .debugReset(1'b0)
-    );
+    );*/
 endmodule

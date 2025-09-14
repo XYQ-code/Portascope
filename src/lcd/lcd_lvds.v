@@ -2,7 +2,7 @@
 // 模块名称：lcd_lvds
 // 功能描述：
 //   LVDS液晶屏驱动模块，产生行/场同步、数据使能信号，并输出测试彩条数据。
-//   可根据实际需求替换为真实图像数据。
+//   用于测试屏幕连接的成功性，显示标准测试图案。
 // 端口说明：
 //   lvds_parallel_clk : 并行像素时钟
 //   lvds_serial_clk   : LVDS串行时钟（未用，可扩展）
@@ -12,12 +12,12 @@
 module lcd_lvds (
     input            lvds_parallel_clk,   // 并行像素时钟
     input            lvds_serial_clk,     // LVDS串行时钟
-    input  [13:0]    data_a,
-    input  [13:0]    data_b,
-    output reg [7:0] lvds_tx0_DATA,       // LVDS通道0数据
-    output reg [7:0] lvds_tx1_DATA,       // LVDS通道1数据
-    output reg [7:0] lvds_tx2_DATA,       // LVDS通道2数据
-    output reg [7:0] lvds_tx3_DATA        // LVDS通道3数据
+    input  [13:0]    data_a,              // 保留接口，测试模式下未使用
+    input  [13:0]    data_b,              // 保留接口，测试模式下未使用
+    output reg [7:0] lvds_tx0_DATA,       // LVDS通道0数据 (R)
+    output reg [7:0] lvds_tx1_DATA,       // LVDS通道1数据 (G)
+    output reg [7:0] lvds_tx2_DATA,       // LVDS通道2数据 (B)
+    output reg [7:0] lvds_tx3_DATA        // LVDS通道3数据 (控制信号)
 );
 
     // 行/场同步及数据使能信号
@@ -67,30 +67,43 @@ module lcd_lvds (
                    (v_cnt >= (V_SYNC + V_BACK)) && (v_cnt < (V_SYNC + V_BACK + V_ACTIVE));
     end
 
-    // ------------------- 波形实时显示输出（示波器风格） -------------------
-    wire [9:0] wave_y_a = (data_a * V_ACTIVE) >> 14; // A通道映射到0~599
-    wire [9:0] wave_y_b = (data_b * V_ACTIVE) >> 14; // B通道映射到0~599
+    // ------------------- 测试图案生成 -------------------
+    wire [10:0] pixel_x = h_cnt - (H_SYNC + H_BACK);  // 当前像素X坐标
+    wire [9:0]  pixel_y = v_cnt - (V_SYNC + V_BACK);  // 当前像素Y坐标
+    
+    // 彩条宽度（8条彩条）
+    wire [7:0] bar_width = H_ACTIVE / 8;
+    wire [2:0] color_sel = pixel_x / bar_width;
+    
+    // RGB颜色定义
+    reg [7:0] test_r, test_g, test_b;
+    
+    always @(*) begin
+        case (color_sel)
+            3'd0: begin test_r = 8'hFF; test_g = 8'hFF; test_b = 8'hFF; end // 白色
+            3'd1: begin test_r = 8'hFF; test_g = 8'hFF; test_b = 8'h00; end // 黄色
+            3'd2: begin test_r = 8'h00; test_g = 8'hFF; test_b = 8'hFF; end // 青色
+            3'd3: begin test_r = 8'h00; test_g = 8'hFF; test_b = 8'h00; end // 绿色
+            3'd4: begin test_r = 8'hFF; test_g = 8'h00; test_b = 8'hFF; end // 品红
+            3'd5: begin test_r = 8'hFF; test_g = 8'h00; test_b = 8'h00; end // 红色
+            3'd6: begin test_r = 8'h00; test_g = 8'h00; test_b = 8'hFF; end // 蓝色
+            3'd7: begin test_r = 8'h00; test_g = 8'h00; test_b = 8'h00; end // 黑色
+            default: begin test_r = 8'h00; test_g = 8'h00; test_b = 8'h00; end
+        endcase
+    end
 
+    // ------------------- LVDS数据输出 -------------------
     always @(posedge lvds_parallel_clk) begin
         if (data_en) begin
-            // 只在对应行点亮像素，示波器风格
-            if ((v_cnt - (V_SYNC + V_BACK)) == wave_y_a)
-                lvds_tx0_DATA <= 8'hFF; // A通道波形为白色
-            else
-                lvds_tx0_DATA <= 8'd0;
-
-            if ((v_cnt - (V_SYNC + V_BACK)) == wave_y_b)
-                lvds_tx1_DATA <= 8'hFF; // B通道波形为白色
-            else
-                lvds_tx1_DATA <= 8'd0;
-
-            lvds_tx2_DATA <= 8'd0;
-            lvds_tx3_DATA <= 8'd0;
+            lvds_tx0_DATA <= test_r;    // 红色通道
+            lvds_tx1_DATA <= test_g;    // 绿色通道
+            lvds_tx2_DATA <= test_b;    // 蓝色通道
+            lvds_tx3_DATA <= {6'b0, hsync, vsync}; // 控制信号
         end else begin
             lvds_tx0_DATA <= 8'd0;
             lvds_tx1_DATA <= 8'd0;
             lvds_tx2_DATA <= 8'd0;
-            lvds_tx3_DATA <= 8'd0;
+            lvds_tx3_DATA <= {6'b0, hsync, vsync}; // 消隐期间保持同步信号
         end
     end
 
